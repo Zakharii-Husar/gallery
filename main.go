@@ -15,13 +15,23 @@ func main() {
     })
 
     r.GET("/users", func(c *gin.Context) {
-        c.String(200, "users")
+        skip := c.DefaultQuery("skip", "1")
+        take := c.DefaultQuery("take", "20")
+        // Convert skip and take to integers
+        //pageNum, _ := strconv.Atoi(skip)
+        //limitNum, _ := strconv.Atoi(take)
+        c.String(200, "Skip: " + skip + "Take: " + take )
     })
     
     r.GET("/users/search", func(c *gin.Context) {
         query, ok := c.GetQuery("query")
+        skip := c.DefaultQuery("skip", "1")
+        take := c.DefaultQuery("take", "20")
+        // Convert skip and take to integers
+        //pageNum, _ := strconv.Atoi(skip)
+        //limitNum, _ := strconv.Atoi(take)
         if ok {
-            c.String(200, "You search for " + query)
+            c.String(200, "You search for " + query + "Skip " + skip + "Take " + take)
         }else{
             c.String(200, "No value was provided in search query!")
         }
@@ -33,7 +43,12 @@ func main() {
     })
 
     r.GET("/users/:user_id/photos", func(c *gin.Context) {
-        c.String(200, "Photos")
+        skip := c.DefaultQuery("skip", "1")
+        take := c.DefaultQuery("take", "20")
+        // Convert skip and take to integers
+        //pageNum, _ := strconv.Atoi(skip)
+        //limitNum, _ := strconv.Atoi(take)
+        c.String(200, "Photos, skip: " + skip + "take " + take) 
     })
 
     r.GET("/users/:user_id/photos/:photo_id/download", func(c *gin.Context) {
