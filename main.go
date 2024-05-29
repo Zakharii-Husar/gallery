@@ -1,10 +1,65 @@
 package main
 
 import (
+	"context"
+	"database/sql"
+	"fmt"
+	"log"
+	"os"
+	"os/signal"
+	"time"
+
 	"github.com/gin-gonic/gin"
+	_ "github.com/microsoft/go-mssqldb"
 )
 
+var db *sql.DB
+
 func main() {
+    
+    // Context
+    ctx, stop := context.WithCancel(context.Background())
+    defer stop()
+
+    appSignal := make(chan os.Signal, 3)
+    signal.Notify(appSignal, os.Interrupt)
+    go func() {
+        <-appSignal
+        stop()
+    }()
+
+    // Replace with your own connection parameters
+    var server = "localhost"
+    var port = 1433
+    var user = "chat_user"
+    var password = "ChatUsrPswd_781"
+    var database = "chat"
+
+    dsn := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%d;database=%s;",
+        server, user, password, port, database)
+
+    db, err := sql.Open("sqlserver", dsn)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    db.SetConnMaxLifetime(0)
+    db.SetMaxIdleConns(3)
+    db.SetMaxOpenConns(3)
+
+    // Open connection
+    OpenDbConnection(ctx, db)
+}
+
+func OpenDbConnection(ctx context.Context, db *sql.DB) {
+    ctx, cancel := context.WithTimeout(ctx, 1*time.Second)
+    defer cancel()
+
+    if err := db.PingContext(ctx); err != nil {
+        log.Fatal("Unable to connect to database: %v", err)
+    }
+
     r := gin.Default()
 
     r.POST("/sign_up", func(c *gin.Context) {
