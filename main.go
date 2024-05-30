@@ -30,7 +30,7 @@ func main() {
 
     // Replace with your own connection parameters
     var server = "localhost"
-    var port = 1433
+    var port = 50119
     var user = "chat_user"
     var password = "ChatUsrPswd_781"
     var database = "chat"
