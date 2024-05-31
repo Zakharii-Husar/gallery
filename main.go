@@ -11,20 +11,24 @@ import (
 var db *sql.DB
 
 func main() {
-    connStr := "Server=MSI\\SQLEXPRESS,1433;Database=chat;Integrated Security=True;"
-
+    connStr := "Server=MSI\\SQLEXPRESS,1433;Database=gallery;Integrated Security=True;"
     db, err := sql.Open("sqlserver", connStr)
-
-    defer db.Close()
-    
     if err != nil {
         log.Fatal("Unabele to connect. Error: ", err)
     }
+    defer db.Close()
 
-    if err := db.Ping(); err != nil {
+    _, err = db.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='users' AND xtype='U')
+    CREATE TABLE users (
+        id INT PRIMARY KEY IDENTITY(1,1),
+        username VARCHAR(100) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL
+    );`)
+    if err != nil {
         log.Fatal(err)
     }
 
+    /////////////////////////////////////////
     r := gin.Default()
 
     r.POST("/sign_up", func(c *gin.Context) {
