@@ -21,9 +21,9 @@ func Init() {
 }
 
 func createTables() {
-    _, err := DB.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='users' AND xtype='U')
+    _, err := DB.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Users' AND xtype='U')
     CREATE TABLE users (
-        id INT PRIMARY KEY IDENTITY(1,1),
+        userId INT PRIMARY KEY IDENTITY(1,1),
         username VARCHAR(100) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL
     );`)
@@ -31,23 +31,23 @@ func createTables() {
         log.Fatal(err)
     }
 
-    _, err = DB.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='albums' AND xtype='U')
+    _, err = DB.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Albums' AND xtype='U')
     CREATE TABLE albums (
-        albumID INT PRIMARY KEY IDENTITY(1,1),
-        album_name VARCHAR(255) NOT NULL,
-        userID INT,
+        albumId INT PRIMARY KEY IDENTITY(1,1),
+        albumName VARCHAR(255) NOT NULL,
+        userId INT,
         FOREIGN KEY (userID) REFERENCES users(id)
     );`)
     if err != nil {
         log.Fatal("Error creating albums table: ", err)
     }
 
-    _, err = DB.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='photos' AND xtype='U')
+    _, err = DB.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Photos' AND xtype='U')
     CREATE TABLE photos (
-        photoID INT PRIMARY KEY IDENTITY(1,1),
-        photo_name VARCHAR(255) NOT NULL,
-        upload_date DATETIME NOT NULL,
-        albumID INT,
+        photoId INT PRIMARY KEY IDENTITY(1,1),
+        photoName VARCHAR(255) NOT NULL,
+        uploadDate DATETIME NOT NULL,
+        albumId INT,
         FOREIGN KEY (albumID) REFERENCES albums(albumID)
     );`)
     if err != nil {
