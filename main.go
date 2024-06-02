@@ -3,12 +3,18 @@ package main
 import (
 	"database/sql"
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/microsoft/go-mssqldb"
 )
 
-var db *sql.DB
+//var db *sql.DB
+
+type SignUpInput struct {
+    Username string `json:"username" binding:"required"`
+    Password string `json:"password" binding:"required"`
+}
 
 func main() {
     connStr := "Server=MSI\\SQLEXPRESS,1433;Database=gallery;Integrated Security=True;"
@@ -28,11 +34,44 @@ func main() {
         log.Fatal(err)
     }
 
+        // Create albums table
+        _, err = db.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='albums' AND xtype='U')
+        CREATE TABLE albums (
+            albumID INT PRIMARY KEY IDENTITY(1,1),
+            album_name VARCHAR(255) NOT NULL,
+            userID INT,
+            FOREIGN KEY (userID) REFERENCES users(id)
+        );`)
+        if err != nil {
+            log.Fatal("Error creating albums table: ", err)
+        }
+
+        _, err = db.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='photos' AND xtype='U')
+        CREATE TABLE photos (
+            photoID INT PRIMARY KEY IDENTITY(1,1),
+            photo_name VARCHAR(255) NOT NULL,
+            upload_date DATETIME NOT NULL,
+            albumID INT,
+            FOREIGN KEY (albumID) REFERENCES albums(albumID)
+        );`)
+        if err != nil {
+            log.Fatal("Error creating photos table: ", err)
+        }
+
     /////////////////////////////////////////
     r := gin.Default()
 
     r.POST("/sign_up", func(c *gin.Context) {
-        c.String(200, "sign_up")
+        var input SignUpInput
+        if err := c.BindJSON(&input); err != nil {
+            c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+            return
+        }
+                // For demonstration, we'll just return the input as a response
+                c.JSON(http.StatusOK, gin.H{
+                    "Status": "Success",
+                    "data":    input,
+                })
     })
     r.GET("/sign_in", func(c *gin.Context) {
         c.String(200, "sign_in")
