@@ -1,13 +1,20 @@
 package models
 
 type User struct {
-	id       int    `json:"id"`
-	username string `json:"username"`
-	password string `json:"password"`
+	userId   int
+	username string
+	password string
+}
+
+type Album struct {
+	albumId   int
+	akbumName string
+	userId    string
 }
 
 type Photo struct {
-	photo_id int    `json:"id"`
-	username string `json:"username"`
-	password string `json:"password"`
+	photoId    int
+	photoName  string
+	uploadDate string
+	albumId    int
 }

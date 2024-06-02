@@ -22,7 +22,7 @@ func Init() {
 
 func createTables() {
     _, err := DB.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Users' AND xtype='U')
-    CREATE TABLE users (
+    CREATE TABLE Users (
         userId INT PRIMARY KEY IDENTITY(1,1),
         username VARCHAR(100) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL
@@ -32,7 +32,7 @@ func createTables() {
     }
 
     _, err = DB.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Albums' AND xtype='U')
-    CREATE TABLE albums (
+    CREATE TABLE Albums (
         albumId INT PRIMARY KEY IDENTITY(1,1),
         albumName VARCHAR(255) NOT NULL,
         userId INT,
@@ -43,7 +43,7 @@ func createTables() {
     }
 
     _, err = DB.Exec(`IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Photos' AND xtype='U')
-    CREATE TABLE photos (
+    CREATE TABLE Photos (
         photoId INT PRIMARY KEY IDENTITY(1,1),
         photoName VARCHAR(255) NOT NULL,
         uploadDate DATETIME NOT NULL,
