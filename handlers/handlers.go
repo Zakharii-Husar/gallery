@@ -15,9 +15,14 @@ func SignUp(c *gin.Context) {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
-    // For demonstration, we'll just return the input as a response
-    usersService.AddUser(input);
-    
+
+    passOk := input.ValidatePass();
+    if !passOk{
+        c.String(400, "Bad password")
+    }
+    user := input.ToORM()
+    usersService.CreateUser(user);
+
     c.JSON(http.StatusOK, gin.H{
         "Status": "Success",
         "data":    input,

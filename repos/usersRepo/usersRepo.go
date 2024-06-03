@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func AddUser(input ORMs.User) error {
+func CreateUser(input ORMs.User) error {
     query := "INSERT INTO users (username, password) VALUES (@Username, @Password)"
     _, err := data.DB.Exec(query, sql.Named("Username", input.Username), sql.Named("Password", input.Password))
     if err != nil {

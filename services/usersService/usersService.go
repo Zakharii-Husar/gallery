@@ -1,11 +1,14 @@
 package usersService
 
 import (
-	"gallery/models/DTOs"
+	"gallery/models/ORMs"
 	"gallery/repos/usersRepo"
 )
 
-func AddUser (input DTOs.SignUpInput){
-	user := input.ToORM()
-	usersRepo.AddUser(user)
+func CreateUser (user ORMs.User){
+	usersRepo.CreateUser(user)
+}
+
+func GetUserByUname (user ORMs.User){
+	usersRepo.CreateUser(user)
 }
