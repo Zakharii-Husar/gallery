@@ -1,15 +1,15 @@
 package main
 
 import (
-	"gallery/db"
+	"gallery/data"
 	"gallery/handlers"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-    db.Init()
-    defer db.DB.Close()
+    data.Init()
+    defer data.DB.Close()
 
     r := gin.Default()
 

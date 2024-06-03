@@ -1,23 +1,23 @@
 package handlers
 
 import (
+	"gallery/models/DTOs"
+	"gallery/services/usersService"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-type SignUpInput struct {
-    Username string `json:"username" binding:"required"`
-    Password string `json:"password" binding:"required"`
-}
 
 func SignUp(c *gin.Context) {
-    var input SignUpInput
+    var input DTOs.SignUpInput
     if err := c.BindJSON(&input); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
     // For demonstration, we'll just return the input as a response
+    usersService.AddUser(input);
+    
     c.JSON(http.StatusOK, gin.H{
         "Status": "Success",
         "data":    input,
