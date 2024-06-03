@@ -2,14 +2,10 @@ package usersService
 
 import (
 	"gallery/models/DTOs"
-	"gallery/models/ORMs"
 	"gallery/repos/usersRepo"
 )
 
 func AddUser (input DTOs.SignUpInput){
-	user := ORMs.User{
-        Username: input.Username,
-        Password: input.Password,
-    }
+	user := input.ToORM()
 	usersRepo.AddUser(user)
 }
