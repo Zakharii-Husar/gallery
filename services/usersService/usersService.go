@@ -9,6 +9,10 @@ func CreateUser (user ORMs.User){
 	usersRepo.CreateUser(user)
 }
 
-func GetUserByUname (user ORMs.User){
-	usersRepo.CreateUser(user)
+func GetUserByUname (uname string) *ORMs.User{
+	user, err := usersRepo.GetUserByUname(uname)
+	if(err == nil){
+		return user;
+	}
+	return nil
 }

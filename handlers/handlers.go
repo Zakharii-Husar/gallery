@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"gallery/models/DTOs"
 	"gallery/services/usersService"
 	"net/http"
@@ -43,8 +44,15 @@ func SearchUsers(c *gin.Context) {
     query, ok := c.GetQuery("query")
     skip := c.DefaultQuery("skip", "1")
     take := c.DefaultQuery("take", "20")
+
     if ok {
-        c.String(200, "You search for " + query + " Skip " + skip + " Take " + take)
+        user := usersService.GetUserByUname(query)
+        username := "ZAK"
+        fmt.Println(query);
+        if user != nil{
+            username = user.Username
+        }
+        c.String(200, "You search for " + username + " Skip " + skip + " Take " + take)
     } else {
         c.String(200, "No value was provided in search query!")
     }
