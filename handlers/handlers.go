@@ -21,6 +21,11 @@ func SignUp(c *gin.Context) {
     if !passOk{
         c.String(400, "Bad password")
     }
+    unameExists := usersService.GetUserByUname(input.Username)
+
+    if unameExists != nil{
+        c.String(400, "Username already registered!")
+    }
     user := input.ToORM()
     usersService.CreateUser(user);
 
