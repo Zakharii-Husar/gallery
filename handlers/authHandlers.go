@@ -25,9 +25,7 @@ func SignUp(c *gin.Context) {
     if unameExists != nil{
         c.String(400, "Username already registered!")
     }
-    user := input.ToORM()
-    usersService.Register(user);
-
+    usersService.Register(input)
     c.JSON(http.StatusOK, gin.H{
         "Status": "Success",
         "data":    input,
@@ -35,10 +33,22 @@ func SignUp(c *gin.Context) {
 }
 
 func SignIn(c *gin.Context) {
-	var input DTOs.SignUpInput
+	var input DTOs.SignInInput
     if err := c.BindJSON(&input); err != nil {
         c.JSON(400, gin.H{"Bad request": err.Error()})
         return
     }
+	user := usersService.GetUserByUname(input.Username)
+
+	if user == nil {
+		c.String(404, "User not found")
+	}
+
+	err := input.VerifyPass(user.Password)
+
+	if err != nil {
+		c.String(401, "Unauthorized")
+	}
+
     c.String(200, "sign_in")
 }
