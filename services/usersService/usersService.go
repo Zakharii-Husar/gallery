@@ -5,7 +5,7 @@ import (
 	"gallery/repos/usersRepo"
 )
 
-func CreateUser (user ORMs.User){
+func Register (user ORMs.User){
 	usersRepo.CreateUser(user)
 }
 

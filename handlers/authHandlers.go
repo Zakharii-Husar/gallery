@@ -26,7 +26,7 @@ func SignUp(c *gin.Context) {
         c.String(400, "Username already registered!")
     }
     user := input.ToORM()
-    usersService.CreateUser(user);
+    usersService.Register(user);
 
     c.JSON(http.StatusOK, gin.H{
         "Status": "Success",
@@ -35,5 +35,10 @@ func SignUp(c *gin.Context) {
 }
 
 func SignIn(c *gin.Context) {
+	var input DTOs.SignUpInput
+    if err := c.BindJSON(&input); err != nil {
+        c.JSON(400, gin.H{"Bad request": err.Error()})
+        return
+    }
     c.String(200, "sign_in")
 }

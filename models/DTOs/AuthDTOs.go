@@ -43,10 +43,14 @@ func (input *SignUpInput) ValidatePass() bool {
     return true
 }
 
-func (input *SignInInput) PasswordToHash() string {
-	hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+func (input *SignInInput) VerifyPass(hashedPass string) error {
+
+hashedPasswordBytes := []byte(hashedPass)
+plainPasswordBytes := []byte(input.Password)
+
+err := bcrypt.CompareHashAndPassword(hashedPasswordBytes, plainPasswordBytes)
     if err != nil {
         panic(err)
     }
-    return string(hash)
+	return err
 }
