@@ -27,7 +27,7 @@ func SignUp(c *gin.Context) {
     }
     usersService.Register(input)
     c.JSON(http.StatusOK, gin.H{
-        "Status": "Success",
+        "Status": "User Created!",
         "data":    input,
     })
 }
@@ -42,13 +42,15 @@ func SignIn(c *gin.Context) {
 
 	if user == nil {
 		c.String(404, "User not found")
+		return
 	}
 
-	err := input.VerifyPass(user.Password)
+	passIsValid := input.VerifyPass(user.Password)
 
-	if err != nil {
+	if !passIsValid {
 		c.String(401, "Unauthorized")
+		return
 	}
 
-    c.String(200, "sign_in")
+    c.String(200, "Log in Successful!")
 }
